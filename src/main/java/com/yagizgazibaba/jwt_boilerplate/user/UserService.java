@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -71,6 +72,10 @@ public class UserService implements UserDetailsService {
             return jwtToken;
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User credentials are wrong");
+    }
+
+    public <T> Optional<T> getClaim(JwtAuthenticationToken jwtAuthenticationToken, String key, Class<T> clazz) {
+        return jwtService.getClaim(jwtAuthenticationToken, key, clazz);
     }
 
 }

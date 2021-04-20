@@ -8,15 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -64,5 +62,11 @@ public class JWTService {
                 .collect(Collectors.joining(","));
         claims.put("authorities", authorities);
         return claims;
+    }
+
+    public <T> Optional<T> getClaim(JwtAuthenticationToken jwtAuthenticationToken, String key, Class<T> clazz) {
+        Map<String, Object> claims = jwtAuthenticationToken.getTokenAttributes();
+        T value = clazz.cast(claims.get(key));
+        return Optional.ofNullable(value);
     }
 }
